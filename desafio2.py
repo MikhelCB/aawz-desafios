@@ -1,14 +1,17 @@
-import pandas as pd  
+#Importanto as bibliotecas do python
+import pandas as pd
 from docx import Document
 import re
 
-documento = Document('datasets/Partnership.docx')
+# Carregar o arquivo DOCX
+doc = Document('./datasets/Partnership.docx')
 
+# Inicializar listas para armazenar os nomes e as cotas dos sócios
 nomes = []
 cotas = []
 
 # Expressão regular para encontrar o nome de cada sócio
-padrao = r"\d+\.\s(.?),.?(\d+)\s+co"
+padrao = r"\d+\.\s(.*?),.*?(\d+)\s+co"
 # Explicação do padrão:
 # \d+   -> Corresponde a um ou mais dígitos (o número do sócio)
 # \.    -> Corresponde a um ponto (separador entre o número do sócio e o nome)
@@ -20,15 +23,22 @@ padrao = r"\d+\.\s(.?),.?(\d+)\s+co"
 # \s+   -> Corresponde a um ou mais caracteres de espaço em branco
 # co    -> Corresponde à sequência "co" (para garantir que estamos capturando o número de cotas)
 
-for paragrafo in documento.paragraphs:
-    pesquisa = re.search(padrao, paragrafo.text)
-    if pesquisa: 
-        nome = pesquisa.group(1)
-        cota = int(pesquisa.group(2))
+# Iterar sobre os parágrafos do documento
+for paragraph in doc.paragraphs:
+    # Procurar padrões no texto do parágrafo
+    match = re.search(padrao, paragraph.text)
+    if match:
+        # Extrair o nome do sócio e suas cotas
+        nome = match.group(1)
+        cota = int(match.group(2))
         nomes.append(nome)
         cotas.append(cota)
-    
-
 print(nomes)
 print(cotas)
-    
+# Criar um DataFrame com os dados
+dados = {"NOME DO SÓCIO": nomes, "NÚMERO DE COTAS": cotas}
+df = pd.DataFrame(dados)
+
+# Exportar o DataFrame para um arquivo Excel
+df.to_excel("./outputs/resultado_desafio2.xlsx", index=False)
+print("Arquivo Excel 'resultado_desafio2.xlsx' criado com sucesso com os dados dos sócios.")

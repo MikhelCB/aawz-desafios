@@ -1,4 +1,4 @@
-#importando a blibliote openpyxl para exportar arquivos em excel e pandas para leitura e interpretação de datasets
+#importando a biblioteca openpyxl para exportar arquivos em excel e pandas para leitura e interpretação de datasets
 import pandas as pd  
 import openpyxl
 
